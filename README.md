@@ -4,6 +4,8 @@ Set/explore oVirt engine configuration using cockpit.
 
 To set a configuration item simply click on a value, change it and hit <Enter>.
 
+![screenshot](https://github.com/rgolangh/ovirt-engine-config-cockpit/blob/master/README.files/README.screenshot.png)
+
 # TODO
  - Fix multi lines values parsing error (like firewall configuration)
  - Support a search box to narrow down the table
