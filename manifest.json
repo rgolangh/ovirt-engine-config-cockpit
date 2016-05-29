@@ -1,0 +1,12 @@
+{
+    "version": 0,
+
+    "tools": {
+        "oVirt Enging Config": {
+            "label": "oVirt Engine Config",
+            "path": "engine-config.html"
+        }
+    },
+
+    "content-security-policy": "default-src 'self' 'unsafe-inline' 'unsafe-eval'"
+}

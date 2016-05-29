@@ -1,0 +1,90 @@
+<head>
+    <title>Engine Config</title>
+    <meta charset="utf-8">
+    <link href="../base1/cockpit.css" type="text/css" rel="stylesheet">
+    <script src="../base1/jquery.js"></script>
+    <script src="../base1/cockpit.js"></script>
+</head>
+<body>
+    <div class="container-fluid" style='max-width: inherit'>
+        <label class="panel-heading" for="prefix">Path to alternative PREFIX</label>
+        <input class="btn panel-default" id="prefix" value="/usr/local/share/ovirt-engine/current">
+        <button class="btn btn-default btn-primary" id="econfig">List All Configuration Items</button>
+        <span id="result"></span>
+        <p>
+        <div class="panel panel-default">
+            <div class="panel-heading">oVirt Engine Configuration</div>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Value</th>
+                        <th>Version</th>
+                </thead>
+                <tbody id="output" style="font-size: smaller;"></tbody>
+            </table>
+        </div>
+        </p>
+    </div>
+
+    <script>
+        var prefix = $("#prefix");
+        var output  = ""
+        var outputTable = document.getElementById('output');
+        var result = $("#result");
+
+        $("#econfig").on("click", econfig_run);
+
+        function econfig_run() {
+            var proc = cockpit.script(prefix.val() + "/bin/engine-config -a  | cat");
+            proc.done(econfig_success);
+            proc.stream(econfig_output);
+            proc.fail(econfig_fail);
+
+            result.empty();
+        }
+
+        function econfig_success() {
+            result.css("color", "green");
+            result.text("success");
+            output.split("\n")
+                .forEach(function (line) {
+                    var splitted = line.split(":")
+                    var row = outputTable.insertRow();
+                    row.insertCell().innerHTML = splitted[0];
+                    var valueCell = $("<td></td>");
+                    valueCell.keypress(showSetVal);
+                    valueCell.prop("contentEditable","true");   
+                    valueCell.html(splitted[1].split(" ").slice(1, -1).toString());
+                    valueCell.appendTo(row);
+                    row.insertCell().innerHTML = splitted[2];
+            });
+        }
+
+        function econfig_fail() {
+            status.css("color", "red");
+            status.text("fail");
+        }
+
+        function econfig_output(data) {
+            output += data;
+        }
+        
+        function showSetVal(event) {
+            if (event.which == 13) {
+                event.preventDefault();
+                event.target.blur();
+                setValue(event.target.previousSibling.textContent, event.target.textContent);        
+            }
+        }
+        
+        function setValue(key, value) {
+            var proc = cockpit.spawn([prefix.val() + "/bin/engine-config", "-s", key + "=" + value]);
+            proc.done(function () {result.text("value updated to " + value)});
+            proc.stream(function () {});
+            proc.fail(econfig_fail);
+        }
+    </script>
+</body>
+</html>
+
