@@ -36,6 +36,7 @@
         $("#econfig").on("click", econfig_run);
 
         function econfig_run() {
+            $("#output").empty();
             var proc = cockpit.script(prefix.val() + "/bin/engine-config -a  | cat");
             proc.done(econfig_success);
             proc.stream(econfig_output);
