@@ -62,9 +62,9 @@
             });
         }
 
-        function econfig_fail() {
-            status.css("color", "red");
-            status.text("fail");
+        function econfig_fail(exception) {
+            result.css("color", "red");
+            result.text(exception.message);
         }
 
         function econfig_output(data) {
@@ -81,7 +81,10 @@
         
         function setValue(key, value) {
             var proc = cockpit.spawn([prefix.val() + "/bin/engine-config", "-s", key + "=" + value]);
-            proc.done(function () {result.text("value updated to " + value)});
+            proc.done(function () {
+                result.css("color", "green");
+                result.text("success");
+                result.result.text("value updated to " + value)});
             proc.stream(function () {});
             proc.fail(econfig_fail);
         }
