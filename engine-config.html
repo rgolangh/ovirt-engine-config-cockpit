@@ -8,8 +8,13 @@
 <body>
     <div class="container-fluid" style='max-width: inherit'>
         <div id="alert" style="margin-top:10px; left: 0px; width: 100%; position: fixed;" class="alert"></div>
-        <label class="panel-heading" for="prefix">Path to alternative PREFIX</label>
-        <input type=text class="form-control" id="prefix" value="/usr/local/share/ovirt-engine/current">
+        <p></p>
+        <form class="form-inline">
+        <div class="form-group">
+            <label for="prefix">Alternative Prefix</label>
+            <input type=text class="form-control" id="prefix" value="/usr/local/share/ovirt-engine/current">
+        </div>
+        </form>
         <p>
         <div class="panel panel-default">
             <div class="panel-heading"><span>oVirt Engine Configuration</span><i id="econfig" style="margin-left:10px; font-size:20px; color:green" class="fa fa-refresh" aria-hidden="true"></i></div>
@@ -37,7 +42,6 @@
 
         function econfig_run() {
             $("td").fadeOut("slow");
-            
             output = "";
             alert.empty();
             var proc = cockpit.script(prefix.val() + "/bin/engine-config -a  | cat");
@@ -70,7 +74,7 @@
             if (output.size == 0) { alert("output is empty" + output)};
             output += data;
         }
-        
+
         function showSetVal(event) {
             if (event.which == 13) {
                 event.preventDefault();
@@ -91,11 +95,11 @@
         function showAlert(success, text) {
             alert.show();
             if (success) {
-                alert.removeClass("alert-danger").addClass("alert-success");    
+                alert.removeClass("alert-danger").addClass("alert-success");
             } else {
                 alert.removeClass("alert-success").addClass("alert-danger");
             }
-            
+
             alert.text(text);
             alert.fadeOut(8000);
         }
